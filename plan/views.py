@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 
+from plan.forms import CustomAuthenticationForm
+
 
 def index(request):
     """
@@ -63,12 +65,13 @@ class LoginView(View):
             'ivalid': True,
         })
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = CustomAuthenticationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('login')
-#     else:
-#         form = CustomAuthenticationForm()
-#     return render(request, 'registration/register.html', {'form': form})
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/login/')
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'registration/registration.html', {'form': form})
