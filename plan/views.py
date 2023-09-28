@@ -1,10 +1,14 @@
+import random
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 
 from plan.forms import CustomAuthenticationForm, Login
+from plan.models import Recipe, StartRecipe
 
 
 def index(request):
@@ -16,9 +20,21 @@ def index(request):
 
 @login_required(login_url='/login/')
 def lk(request):
+    if request.GET:
+        print('GET', request.GET)
+    recipe = list(Recipe.objects.all())
     user = request.user
-    context = {'user': user}
-    # context = {'client': Client.objects.get(id=id)}
+    start_recipe = StartRecipe.objects.filter(user=user)[0]
+    if not start_recipe:
+        recipes = StartRecipe.objects.create(user=user)
+        for i in range(3):
+            random_recipe = random.choice(recipe)
+            recipes.recipe.add(random_recipe)
+        start_recipe = StartRecipe.objects.filter(user=user)[0]
+    context = {
+        'user': user,
+        'start_recipe': start_recipe,
+    }
     return render(request, 'lk.html', context=context)
 
 
@@ -52,7 +68,18 @@ def register(request):
         form = CustomAuthenticationForm(request.POST)
         if form.is_valid():
             form.save()
+            username = form.cleaned_data.get('username')
+            User.objects.update_or_create(username=username, defaults={'email': username})
             return redirect('/login/')
     else:
         form = CustomAuthenticationForm()
     return render(request, 'registration/registration.html', {'form': form})
+
+
+def recipe_detail(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    context = {
+        'recipe': recipe,
+    }
+
+    return render(request, 'card1.html', context)

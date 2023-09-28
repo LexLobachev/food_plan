@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -39,6 +40,8 @@ class IngredientItem(models.Model):
 
 class Recipe(models.Model):
     title = models.CharField(max_length=200)
+    menu_type = models.ForeignKey(MenuType, verbose_name='Тип меню', related_name='recipes', on_delete=models.PROTECT)
+    image = models.ImageField('Изображение', upload_to='recipes/')
     description = models.TextField('Описание рецепта')
     text = models.TextField('Текст рецепта')
 
@@ -48,6 +51,19 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class StartRecipe(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='start_recipes',
+                             on_delete=models.PROTECT, blank=True, null=True)
+    recipe = models.ManyToManyField(Recipe, verbose_name='Рецепт', related_name='start_recipes', blank=True)
+
+    class Meta:
+        verbose_name = 'Стартовый рецепт'
+        verbose_name_plural = 'Стартовые рецепты'
+
+    def __str__(self):
+        return f'{self.user.first_name} рецепт {self.recipe}'
 
 
 class Subscription(models.Model):
@@ -67,7 +83,8 @@ class Subscription(models.Model):
 
     number_of_persons = models.PositiveIntegerField('Кол-во персон', default=1)
 
-    allergies = models.ManyToManyField(Ingredient, related_name='banned_for_subscriptions', verbose_name='Ингредиенты с аллергией')
+    allergies = models.ManyToManyField(Ingredient, related_name='banned_for_subscriptions',
+                                       verbose_name='Ингредиенты с аллергией')
 
     class Meta:
         verbose_name = 'Подписка'
