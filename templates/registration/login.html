@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Foodplan 2021 - Меню на неделю FOODPLAN</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Foodplan 2021 - Меню на неделю FOODPLAN{% endblock title %}
+
+{% block content %}
     <header>
         <nav class="navbar navbar-expand-md navbar-light fixed-top navbar__opacity">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="img/logo.8d8f24edbb5f.svg" height="55" width="189" alt="">
+                    <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse1"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +18,9 @@
                         
                         <li class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end">
                             <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</button>
-                            <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Войти</button>
+                            <a href="{% url 'plan:logout' %}"
+                                class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Выйти</a>
+                            <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Выйти</button>
                         </li>
                     </ul>
                 </div>
@@ -46,18 +41,21 @@
                     <h2 class="text-center"><strong>Авторизация</strong></h2>
                 </div>
                 <div class="card px-5 py-3 d-flex align-items-center foodplan__shadow">
-                    <form>
+                    <form  method="POST">
+                        {% csrf_token %}
                         <h1 class="mb-4 text-center"><strong>Вход</strong></h1>
                         <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <label for="exampleInputEmail1" class="form-label">Email</label>
+                            </div>
+                            {{ form.username }}
                         </div>
                         <div class="mb-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <label for="exampleInputPassword1" class="form-label">Пароль</label>
                                 <small><a href="#" class="link-dark foodplan_green">Забыли пароль?</a></small>
                             </div>
-                            <input type="password" class="form-control" id="password">
+                            {{ form.password }}
                         </div>
                         <div class="row mb-3">
                             <div class="col-12 col-sm-6 mt-3">
@@ -73,15 +71,18 @@
             </div>
         </section>
     </main>
+{% endblock content %}
+
+{% block footer %}
     <footer>
         <nav class="navbar navbar-expand-md navbar-light mt-5">
             <div class="container p-2">
                 <a class="navbar-brand" href="#">
-                    <img src="img/logo.8d8f24edbb5f.svg" height="55" width="189" alt="">
+                    <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
                 <div class="footer__sideBtns d-flex">
                     <a href="#">
-                        <img src="img/vk.png" height="38" width="auto" alt="">
+                        <img src="{% static 'img/vk.png' %}" height="38" width="auto" alt="">
                     </a>
                 </div>
             </div>
@@ -95,8 +96,4 @@
             </small>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock footer %}
