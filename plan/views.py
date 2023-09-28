@@ -14,7 +14,7 @@ def index(request):
     return render(request, "index.html")
 
 
-@login_required(login_url=reverse_lazy('login'))
+@login_required(login_url='/login/')
 def lk(request):
     user = request.user
     context = {'user': user}
