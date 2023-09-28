@@ -3,6 +3,28 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
+class Login(forms.Form):
+    username = forms.EmailField(
+        label='Email', max_length=95, required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'email',
+            'placeholder': 'Введите свой Email',
+            'aria - describedby': 'emailHelp',
+            'type': 'email',
+        })
+    )
+    password = forms.CharField(
+        label='Пароль', max_length=95, required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите пароль',
+            'id': 'password',
+            'type': 'password',
+        })
+    )
+
+
 class CustomAuthenticationForm(UserCreationForm):
     first_name = forms.CharField(label='Имя', widget=forms.TextInput(
         attrs={
