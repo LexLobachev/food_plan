@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (Subscription, MenuType,
-                     Ingredient, IngredientItem, Recipe, StartRecipe, Avatar)
+                     Ingredient, IngredientItem, Recipe, StartRecipe, Avatar, CategoryIngredient)
 
 
 class IngredientItemInline(admin.TabularInline):
@@ -43,4 +43,9 @@ class StartRecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(CategoryIngredient)
+class CategoryIngredientAdmin(admin.ModelAdmin):
     pass
