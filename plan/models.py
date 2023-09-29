@@ -15,9 +15,22 @@ class MenuType(models.Model):
         return self.title
 
 
+class CategoryIngredient(models.Model):
+    title = models.CharField('Категория', max_length=200)
+
+    class Meta:
+        verbose_name = 'Категория ингредиента'
+        verbose_name_plural = 'Категории ингредиентов'
+
+    def __str__(self):
+        return self.title
+
+
 class Ingredient(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField('Ингредиент', max_length=200)
     calories = models.FloatField('Калорийность на 100г')
+    category = models.ForeignKey(CategoryIngredient, related_name='ingredients',
+                                 on_delete=models.PROTECT, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Ингредиент'

@@ -18,6 +18,27 @@ def index(request):
     return render(request, "index.html")
 
 
+def card2(request):
+    """
+    View function for home page of site.
+    """
+    return render(request, "card2.html")
+
+
+def card3(request):
+    """
+    View function for home page of site.
+    """
+    return render(request, "card3.html")
+
+
+def order(request):
+    """
+    View function for home page of site.
+    """
+    return render(request, "order.html")
+
+
 def update_profile(request, user):
     if request.GET['NAME'] and request.GET['EMAIL']:
         user.first_name = request.GET['NAME']
