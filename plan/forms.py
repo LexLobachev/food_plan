@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+from plan.models import Avatar
+
 
 class Login(forms.Form):
     username = forms.EmailField(
@@ -55,3 +57,12 @@ class CustomAuthenticationForm(UserCreationForm):
         model = User
         fields = ('first_name', 'username', 'password1', 'password2')
 
+
+class ImageForm(forms.Form):
+    image = forms.FileField(label='Выберите изображение', widget=forms.FileInput(
+        attrs={
+            'class': 'form-control', 'placeholder': 'Выберите изображение',
+            'type': 'file', 'id': 'file', 'aria - describedby': 'fileHelp',
+            'name': 'file'
+        }
+    ))

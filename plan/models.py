@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class MenuType(models.Model):
@@ -70,10 +71,11 @@ class Subscription(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(verbose_name='Описание подписки')
 
-    # TODO: user = models.ForeignKey('User')
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='subscriptions', on_delete=models.PROTECT)
 
     type = models.ForeignKey(MenuType, related_name='subscriptions', on_delete=models.PROTECT)
 
+    start_date = models.DateField(verbose_name='Дата начала подписки', default=timezone.now)
     expire_date = models.DateField(verbose_name='Дата окончания подписки')
 
     have_breakfast = models.BooleanField('Завтраки', default=False)
@@ -84,11 +86,22 @@ class Subscription(models.Model):
     number_of_persons = models.PositiveIntegerField('Кол-во персон', default=1)
 
     allergies = models.ManyToManyField(Ingredient, related_name='banned_for_subscriptions',
-                                       verbose_name='Ингредиенты с аллергией')
+                                       verbose_name='Ингредиенты с аллергией', blank=True)
+    is_acive = models.BooleanField('Активная', default=True)
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
 
     def __str__(self):
-        return f'{self.title} - self.user.name(TODO)'
+        return f'{self.title} - {self.user.first_name}'
+
+
+class Avatar(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='avatars/', verbose_name='Аватар', default='avatars/default.jpeg')
+
+    def __str__(self):
+        return f'{self.user.first_name} - {self.image.name}'
+
+
