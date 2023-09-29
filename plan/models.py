@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.utils.html import mark_safe
 
 
 class MenuType(models.Model):
@@ -52,6 +53,12 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def thumbnail_preview(self):
+        if self.image:
+            return mark_safe('<img src="{}" width="200" height="200" />'.format(self.image.url))
+        return ""
 
 
 class StartRecipe(models.Model):
