@@ -138,8 +138,10 @@ def register(request):
 
 def recipe_detail(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
+    ingredients = recipe.ingredients.all()
     context = {
         'recipe': recipe,
+        'ingredients': ingredients
     }
 
     return render(request, 'card1.html', context)
