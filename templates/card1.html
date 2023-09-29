@@ -1,41 +1,33 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}План питания на неделю, меню, рецепты, список покупок. Классическое меню, безуглеводное меню{% endblock title %}
+{% block title %}
+  План питания на неделю, меню, рецепты, список покупок. Классическое меню, безуглеводное меню
+{% endblock title %}
 
 {% block content %}
-    <header>
-        <nav class="navbar navbar-light fixed-top navbar__opacity">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="logo.8d8f24edbb5f.svg">
-                </a>
-                <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Войти</button>
+  <main style="margin-top: calc(2rem + 75px);">
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-4 d-flex justify-content-center">
+            <div class="card foodplan__card_borderless">
+              <img src="{{ recipe.image.url }}" alt="{% static 'img/circle1.png' %}">
             </div>
-        </nav>
-    </header>
-    <main style="margin-top: calc(2rem + 75px);">
-        <section>
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                        <div class="card foodplan__card_borderless">
-                            <img src="{% static 'img/circle1.png' %}" alt="img/circle1.png">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-                        <h2>Название рецепта</h2>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ингредиент (500г.)</li>
-                            <li class="list-group-item">ингредиент (500г.)</li>
-                            <li class="list-group-item">ингредиент (500г.)</li>
-                            <li class="list-group-item">ингредиент (500г.)</li>
-                            <li class="list-group-item">ингредиент (500г.)</li>
-                        </ul>
-                        <h6>Общая калорийность: 1000 ккал</h6>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+            <h2>{{ recipe.title }}</h2>
+            <h6>{{ recipe.description }}</h6>
+          </div>
+          <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+            <h2>Ингредиенты:</h2>
+            <ul class="list-group list-group-flush">
+              {% for item in ingredients %}
+                <li class="list-group-item">{{ item.ingredient.title }} ({{ item.quantity }}г.)</li>
+              {% endfor %}
+            </ul>
+            <h6>Общая калорийность: 1000 ккал</h6>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
   {% include 'footer.html' %}
 {% endblock content %}
