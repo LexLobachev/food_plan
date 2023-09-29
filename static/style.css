@@ -9,6 +9,10 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
+.footer {
+	padding-bottom: 20px;
+}
+
 .foodplan__bg_grey {
     background-color: #F5F5F5;
 }
