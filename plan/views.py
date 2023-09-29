@@ -73,9 +73,12 @@ def lk(request):
         start_recipe = None
     if not start_recipe:
         recipes = StartRecipe.objects.create(user=user)
-        for i in range(3):
+        while True:
             random_recipe = random.choice(recipe)
             recipes.recipe.add(random_recipe)
+            if recipes.recipe.count() == 3:
+                break
+        recipes.save()
         start_recipe = StartRecipe.objects.filter(user=user)[0]
     subscriptions = list(Subscription.objects.filter(user=user))
     if subscriptions:
