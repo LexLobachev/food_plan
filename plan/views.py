@@ -1,7 +1,7 @@
 import random
 
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -18,11 +18,21 @@ def index(request):
     return render(request, "index.html")
 
 
-def card2(request):
+@login_required(login_url='/login/')
+def view_random_recipe(request):
     """
-    View function for home page of site.
+    View function for random card recipe of site.
     """
-    return render(request, "card2.html")
+    user = request.user
+    start_recipe = StartRecipe.objects.get(user=user)
+    recipe = random.choice(start_recipe.recipe.all())
+    ingredients = recipe.ingredients.all()
+    context = {
+        'recipe': recipe,
+        'ingredients': ingredients
+    }
+
+    return render(request, "card2.html", context)
 
 
 def card3(request):
@@ -147,4 +157,4 @@ def recipe_detail(request, pk):
         'ingredients': ingredients
     }
 
-    return render(request, 'card1.html', context)
+    return render(request, 'card2.html', context)

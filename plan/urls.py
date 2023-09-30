@@ -13,7 +13,7 @@ urlpatterns = [
     path('accounts/profile/', views.lk, name='lk'),
     path('register/', views.register, name='register'),
     path('recipe/<int:pk>/', views.recipe_detail, name='recipe_detail'),
-    path('card2/', views.card2, name='card2'),
     path('card3/', views.card3, name='card3'),
     path('order/', views.order, name='order'),
+    path('free-recipe/', views.view_random_recipe, name='view_random_recipe'),
     ]

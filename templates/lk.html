@@ -58,15 +58,55 @@
                     <div class="card col-12 col-md-10 p-3 mb-3 foodplan__shadow">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item foodplan__tab-item">
-                                    <button id="tab1" class="btn shadow-none foodplan__tab-button active" data-bs-toggle="tab" data-bs-target="#data">Персональные данные</button>
+                                    <button id="tab1" class="btn shadow-none foodplan__tab-button active" data-bs-toggle="tab" data-bs-target="#menu">Моё меню</button>
                                 </li>
                                 <li class="nav-item foodplan__tab-item">
-                                    <button id="tab2" class="btn shadow-none foodplan__tab-button" data-bs-toggle="tab" data-bs-target="#menu">Моё меню</button>
+                                    <button id="tab2" class="btn shadow-none foodplan__tab-button" data-bs-toggle="tab" data-bs-target="#data">Персональные данные</button>
                                 </li>
                                 <li class="nav-item foodplan__tab-item flex-grow-1"></li>
                             </ul>
                             <div class="tab-content mt-2">
-                                <div class="tab-pane fade show active" id="data">
+                                <div class="tab-pane fade show active" id="menu">
+                                    {% for subscription in subscriptions %}
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
+                                            </div>
+                                            <div class="col-10 col-md-10">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h2>Подписка: {{ subscription.title }}</h2>
+                                                    </div>
+                                                    <div class="col-md-12 col-lg-9">
+                                                        <h6>{{subscription.description}}</h6>
+                                                    </div>
+                                                    <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Персоны: </small><small>{{ subscription.number_of_persons }}</small>
+                                                        </div>
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            {% if subscription.allergies %}
+                                                                {% for allergies in subscriptions.allergies.all %}
+                                                                    <small>Аллергии: </small><small>{{ allergies }}</small>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <small>Аллергии: </small><small>нет</small>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Калории: </small><small>1400</small>
+                                                        </div>
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Кол-во приёмов пищи: </small><small>{{ subscription.number_of_persons }}</small>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="tab-pane fade" id="data">
                                     <form >
                                         {% csrf_token %}
                                         <div class="mb-3">
@@ -74,7 +114,7 @@
                                                 <label for="exampleInputEmail1" class="form-label">Имя</label>
                                                 <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
-                                        
+
                                             <input type="text" class="form-control" id="name" name="NAME" placeholder="{{ user.first_name }}">
                                         </div>
                                         <div class="mb-3">
@@ -86,7 +126,7 @@
                                                 <label for="exampleInputPassword1" class="form-label">Пароль</label>
                                                 <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
-                                        
+
                                             <input type="password" class="form-control" id="password" name="password">
                                         </div>
                                         <div class="mb-3">
@@ -99,44 +139,6 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="tab-pane fade" id="menu">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
-                                        </div>
-                                        <div class="col-10 col-md-10">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <h2>Название подписки</h2>
-                                                </div>
-                                                <div class="col-md-12 col-lg-9">
-                                                    <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis necessitatibus
-                                                        consectetur rem! Eligendi assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae
-                                                        distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis
-                                                        necessitatibus consectetur rem! Eligendi
-                                                        assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae distinctio cum laboriosam
-                                                        sed.</h6>
-                                                </div>
-                                                <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Персоны: </small><small>3</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>нет</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Калории: </small><small>1400</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Кол-во приёмов пищи: </small><small>4</small>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
                             </div>
                             
                     </div>
@@ -145,7 +147,7 @@
                         <div class="position-relative">
                             <img src="{% static 'img/free_money.jpg' %}" alt="бесплатно" width="100" height="100" class="rounded-pill">
                         </div>
-                        <h3 class="card-title text-center"> Бесплатные рецепты</h3>
+                        <h3 class="card-title text-center">Рецепты по подписке</h3>
                     </div>
 
                     <div class="card col-12 col-md-10 p-3 mb-3 foodplan__shadow">
@@ -164,12 +166,12 @@
                                                 <div class="col-md-12 col-lg-9">
                                                     <h5>Описание блюда</h5>
                                                     <hr style="color:red;">
-                                                    <h6>{{ recipe.description }}</h6>
+                                                    <h6>{{ recipe.description|stringformat:".255s" }}</h6>
                                                     <h5>Рецепт</h5>
                                                     <hr style="color:red;">
-                                                    <h6>{{ recipe.text }}</h6>
+                                                    <h6>{{ recipe.text|stringformat:".255s" }}</h6>
                                                     <hr style="color:blue;">
-                                                    <a href="{% url 'plan:recipe_detail' pk=recipe.pk %}" class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Смотреть ингридиенты</a>
+                                                    <a href="{% url 'plan:recipe_detail' pk=recipe.pk %}" class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Смотреть полностью</a>
                                                 </div>
                                                 <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
                                                     <div class="d-flex flex-row justify-content-between">
