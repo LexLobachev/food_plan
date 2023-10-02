@@ -26,6 +26,11 @@ DEBUG = env.bool('DEBUG', False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['localhost', '127.0.0.1'])
 
+YOOKASSA_SHOP_ID = env('YOOKASSA_SHOP_ID')
+YOOKASSA_SECRET_KEY = env('YOOKASSA_SHOP_ID')
+WEBSITE_URL = env('WEBSITE_URL')
+
+
 # Application definition
 
 INSTALLED_APPS = [

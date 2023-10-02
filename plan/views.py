@@ -1,4 +1,7 @@
+import json
 import random
+import uuid
+from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -7,8 +10,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 
-from plan.forms import CustomAuthenticationForm, Login, ImageForm
+from food_plan.settings import YOOKASSA_SHOP_ID, YOOKASSA_SECRET_KEY, WEBSITE_URL
+from plan.forms import CustomAuthenticationForm, Login, ImageForm, OrderForm
 from plan.models import Recipe, StartRecipe, Subscription, Avatar
+
+from yookassa import Payment, Configuration
 
 
 def index(request):
@@ -32,7 +38,7 @@ def view_random_recipe(request):
         'ingredients': ingredients
     }
 
-    return render(request, "card2.html", context)
+    return render(request, "card1.html", context)
 
 
 def card3(request):
@@ -43,10 +49,45 @@ def card3(request):
 
 
 def order(request):
-    """
-    View function for home page of site.
-    """
-    return render(request, "order.html")
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            Configuration.account_id = YOOKASSA_SHOP_ID
+            Configuration.secret_key = YOOKASSA_SECRET_KEY
+
+            print(form.cleaned_data)
+            promo_code = form.cleaned_data['promo_code']
+            subscription_period = form.cleaned_data['subscription_period']
+            persons_quantity = form.cleaned_data['persons_quantity']
+            meals = form.cleaned_data['meals']
+            menu_type = form.cleaned_data['menu_type']
+            allergens = form.cleaned_data['allergens']
+
+            subscription = Subscription.objects.create(
+                user=request.user,
+                expire_date=datetime.now() + timedelta(days=subscription_period * 30),
+                number_of_persons=persons_quantity,
+                type=menu_type,
+                allergies=allergens
+            )
+
+            payment = Payment.create({
+                "amount": {
+                    "value": 20,
+                    "currency": "RUB"
+                },
+                "confirmation": {
+                    "type": "redirect",
+                    "return_url": f'{WEBSITE_URL}/payment_result/?subscription_id={subscription.id}'
+                },
+                "capture": True,
+                "description": None
+            })
+
+            return redirect(payment.confirmation.confirmation_url)
+    else:
+        form = OrderForm()
+    return render(request, 'order.html', {'form': form})
 
 
 def update_profile(request, user):
@@ -157,4 +198,4 @@ def recipe_detail(request, pk):
         'ingredients': ingredients
     }
 
-    return render(request, 'card2.html', context)
+    return render(request, 'card1.html', context)
