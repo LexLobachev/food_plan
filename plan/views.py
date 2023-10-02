@@ -16,6 +16,8 @@ from plan.models import Recipe, StartRecipe, Subscription, Avatar
 
 from yookassa import Payment, Configuration
 
+from plan.pay import pay
+
 
 def index(request):
     """
@@ -58,6 +60,17 @@ def order(request):
             subscription.append({'key': key, 'value': request.POST[key]})
         print(subscription)
         subscription, created = create_subscription(subscription, request)
+        if create_subscription:
+            price = 1200
+            email = subscription.user.email
+            title = subscription.title
+            order_number = subscription.pk
+
+            create_pay = pay(price, email, title, order_number)
+
+            print(create_pay["confirmation"])
+            url = create_pay["confirmation"]["confirmation_url"]
+            return redirect(url)
 
     allergies = list(CategoryIngredient.objects.all())
     context = []
