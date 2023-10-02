@@ -6,13 +6,14 @@ from django.utils.html import mark_safe
 
 class MenuType(models.Model):
     title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True,  blank=True, null=True)
 
     class Meta:
         verbose_name = 'Тип меню'
         verbose_name_plural = 'Типы меню'
 
     def __str__(self):
-        return self.title
+        return f'{self.pk} {self.title}'
 
 
 class CategoryIngredient(models.Model):
@@ -105,7 +106,7 @@ class Subscription(models.Model):
 
     number_of_persons = models.PositiveIntegerField('Кол-во персон', default=1)
 
-    allergies = models.ManyToManyField(Ingredient, related_name='banned_for_subscriptions',
+    allergies = models.ManyToManyField(CategoryIngredient, related_name='banned_for_subscriptions',
                                        verbose_name='Ингредиенты с аллергией', blank=True)
     is_acive = models.BooleanField('Активная', default=True)
 

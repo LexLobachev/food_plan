@@ -8,7 +8,8 @@ from django.urls import reverse_lazy
 from django.views import View
 
 from plan.forms import CustomAuthenticationForm, Login, ImageForm
-from plan.models import Recipe, StartRecipe, Subscription, Avatar
+from plan.models import Recipe, StartRecipe, Subscription, Avatar, CategoryIngredient
+from plan.operations import create_subscription
 
 
 def index(request):
@@ -44,9 +45,20 @@ def card3(request):
 
 def order(request):
     """
-    View function for home page of site.
+    View function for order page of site.
     """
-    return render(request, "order.html")
+    if request.method == 'POST':
+        subscription = []
+        for key in request.POST:
+            subscription.append({'key': key, 'value': request.POST[key]})
+        print(subscription)
+        subscription, created = create_subscription(subscription, request)
+
+    allergies = list(CategoryIngredient.objects.all())
+    context = []
+    for allergy in allergies:
+        context.append({'title': allergy.title, 'id': allergy.id})
+    return render(request, 'order.html', context={'allergies': context})
 
 
 def update_profile(request, user):
