@@ -119,17 +119,18 @@ def order(request):
 
 
 def update_profile(request, user):
-    if request.GET['NAME'] and request.GET['EMAIL']:
-        user.first_name = request.GET['NAME']
-        user.email = request.GET['EMAIL']
-        user.save()
-    elif request.GET['NAME'] and not request.GET['EMAIL']:
-        user.first_name = request.GET['NAME']
-        user.save()
-    elif not request.GET['NAME'] and request.GET['EMAIL']:
-        user.email = request.GET['EMAIL']
-        user.save()
-    return user
+    if "NAME" or 'EMAIL' in request.GET:
+        if request.GET['NAME'] and request.GET['EMAIL']:
+            user.first_name = request.GET['NAME']
+            user.email = request.GET['EMAIL']
+            user.save()
+        elif request.GET['NAME'] and not request.GET['EMAIL']:
+            user.first_name = request.GET['NAME']
+            user.save()
+        elif not request.GET['NAME'] and request.GET['EMAIL']:
+            user.email = request.GET['EMAIL']
+            user.save()
+        return user
 
 
 @login_required(login_url='/login/')
@@ -137,15 +138,12 @@ def lk(request):
     form = ImageForm()
     recipe = list(Recipe.objects.all())
     user = request.user
-    if request.GET:
-        print('GET', request.GET)
-        update_profile(request, user)
-
-    if request.method == 'FILES':
-        a =Avatar.objects.update_or_create(user=user, defaults={
+    if request.method == 'POST':
+        Avatar.objects.update_or_create(user=user, defaults={
             'image': request.FILES['image']
         })
-        a.save()
+    if request.GET:
+        update_profile(request, user)
     try:
         start_recipe = StartRecipe.objects.get(user=user)
     except StartRecipe.DoesNotExist:
