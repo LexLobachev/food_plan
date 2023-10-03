@@ -30,7 +30,7 @@ class CategoryIngredient(models.Model):
 class Ingredient(models.Model):
     title = models.CharField('Ингредиент', max_length=200)
     calories = models.FloatField('Калорийность на 100г')
-    category = models.ForeignKey(CategoryIngredient, related_name='ingredients',
+    category = models.ForeignKey(CategoryIngredient, related_name='ingredients_category',
                                  on_delete=models.PROTECT, blank=True, null=True)
 
     class Meta:
@@ -60,6 +60,8 @@ class Recipe(models.Model):
     image = models.ImageField('Изображение', upload_to='recipes/')
     description = models.TextField('Описание рецепта')
     text = models.TextField('Текст рецепта')
+    category = models.ForeignKey(CategoryIngredient, related_name='category',
+                                 on_delete=models.PROTECT, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Рецепт'

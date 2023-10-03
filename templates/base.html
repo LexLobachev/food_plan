@@ -25,6 +25,9 @@
                   {% else %}
                       <a href="{% url 'plan:login' %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Войти</a>
                   {% endif %}
+                  {% if request.get_full_path == "/order/" %}
+                    <h3 class="text-secondary mt-2 me-2 myprice">Стоимость: 00000₽</h3>
+                  {% endif %}
               </div>
           </nav>
       </header>

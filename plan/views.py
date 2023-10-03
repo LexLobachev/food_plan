@@ -156,24 +156,27 @@ def lk(request):
             if recipes.recipe.count() == 3:
                 break
         recipes.save()
-        start_recipe = StartRecipe.objects.filter(user=user)[0]
+    recipes = []
     subscriptions = list(Subscription.objects.filter(user=user))
     if subscriptions:
         for subscription in subscriptions:
+            allergie = subscription.allergies.all()
+            recipes.append(Recipe.objects.exclude(category__in=allergie))
+            print('allergie =', recipes)
             if subscription.start_date >= subscription.expire_date:
                 subscription.is_acive = False
                 subscription.save()
     if not Avatar.objects.filter(user=user):
         Avatar.objects.create(user=user)
     avatar = Avatar.objects.get(user=user)
+    print('recipes =', recipes)
     context = {
         'user': user,
-        'start_recipe': start_recipe,
+        'start_recipe': recipes,
         'subscriptions': subscriptions,
         'avatar': avatar,
         'form': form,
     }
-
     return render(request, 'lk.html', context=context)
 
 
